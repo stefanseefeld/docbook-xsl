@@ -27,6 +27,7 @@ install:
 
 script:
 - make
+- make doc
 - make check
 - make dist
 - export VERSION=$(make version)
