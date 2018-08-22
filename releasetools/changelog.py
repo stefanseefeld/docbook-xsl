@@ -19,7 +19,11 @@ command = ['git', 'log', '--format=%s' % GIT_LOG_FORMAT, '--name-only']
 if not all:
     # Determine the last release tag and limit history to then.
     release = ['git', 'describe', '--tags', '--match', 'release/*', '--abbrev=0']
-    out = subprocess.check_output(release)
+    try:
+        out = subprocess.check_output(release, stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError as e:
+        print('Error executing "{}": {}'.format(' '.join(e.cmd), e.output))
+        sys.exit(-1)
     out = out.strip()
     command.append('%s..HEAD'%out.decode(encoding='UTF-8'))
 out = subprocess.check_output(command)
